@@ -10,7 +10,7 @@ export default async function handler(req, res) {
 
   const { prompt } = req.body;
   if (!prompt || prompt.length > 5000) {
-    return res.status(400).json({ error: 'Prompt invalide ou trop long' });
+    return res.status(400).json({ error: 'Prompt invalide' });
   }
 
   const apiKey = process.env.GEMINI_API_KEY;
@@ -25,7 +25,16 @@ export default async function handler(req, res) {
     });
 
     const data = await response.json();
-    return res.status(200).json(data);
+    
+    // Extraction directe du texte généré
+    const letterText = data.candidates?.[0]?.content?.parts?.[0]?.text;
+
+    if (!letterText) {
+      return res.status(500).json({ error: 'Format de réponse invalide' });
+    }
+
+    // On renvoie le résultat propre sous la clé "result"
+    return res.status(200).json({ result: letterText });
   } catch (error) {
     return res.status(500).json({ error: 'Erreur serveur interne' });
   }
