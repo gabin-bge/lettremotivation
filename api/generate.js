@@ -26,16 +26,21 @@ export default async function handler(req, res) {
 
     const data = await response.json();
     
-    // Extraction directe du texte généré
-    const letterText = data.candidates?.[0]?.content?.parts?.[0]?.text;
+    // Si l'API Gemini renvoie une erreur, on l'affiche dans les logs Vercel
+    if (!response.ok) {
+      console.error("Erreur API Gemini:", JSON.stringify(data));
+      return res.status(500).json({ error: 'Erreur renvoyée par l\'API Gemini' });
+    }
 
+    const letterText = data.candidates?.[0]?.content?.parts?.[0]?.text;
     if (!letterText) {
+      console.error("Structure de réponse inconnue:", JSON.stringify(data));
       return res.status(500).json({ error: 'Format de réponse invalide' });
     }
 
-    // On renvoie le résultat propre sous la clé "result"
     return res.status(200).json({ result: letterText });
   } catch (error) {
+    console.error("Erreur interne serveur:", error);
     return res.status(500).json({ error: 'Erreur serveur interne' });
   }
 }
