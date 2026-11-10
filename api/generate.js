@@ -17,13 +17,16 @@ export default async function handler(req, res) {
       contents: prompt,
     });
 
-    if (!response || !response.text) {
-      return res.status(500).json({ error: 'Réponse vide de l\'IA' });
+    // Extraction sécurisée du texte selon le SDK
+    const textOutput = response.text || response.candidates?.[0]?.content?.parts?.[0]?.text;
+
+    if (!textOutput) {
+      return res.status(500).json({ error: 'Réponse vide reçue de Gemini' });
     }
 
-    return res.status(200).json({ result: response.text });
+    return res.status(200).json({ result: textOutput });
   } catch (error) {
-    console.error("ERREUR SDK GEMINI:", error);
-    return res.status(500).json({ error: error.message || 'Erreur serveur' });
+    console.error("ERREUR SERVEUR:", error);
+    return res.status(500).json({ error: error.message || 'Erreur serveur interne' });
   }
 }
