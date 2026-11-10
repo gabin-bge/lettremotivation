@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="fr" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LettreMotiv.ai - Générateur de Lettre de Motivation IA</title>
+
+    <!-- Google Fonts & Icons -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Plus Jakarta Sans', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            50: '#f0f5ff',
+                            100: '#e0ebff',
+                            400: '#60a5fa',
+                            500: '#3b82f6',
+                            600: '#2563eb',
+                            700: '#1d4ed8',
+                        },
+                        darkBg: '#090d16',
+                        cardBg: '#111827',
+                        borderBg: '#1f2937'
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-darkBg text-slate-100 font-sans min-h-screen flex flex-col justify-between antialiased relative">
+
+    <!-- Navbar -->
+    <header class="border-b border-slate-800/80 backdrop-blur-md sticky top-0 z-40 bg-darkBg/80">
+        <div class="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
+            <div class="flex items-center space-x-3">
+                <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-brand-600 to-indigo-500 flex items-center justify-center text-white font-bold text-lg shadow-lg shadow-brand-500/20">
+                    L
+                </div>
+                <span class="text-xl font-extrabold tracking-tight bg-gradient-to-r from-white via-slate-200 to-slate-400 bg-clip-text text-transparent">
+                    LettreMotiv<span class="text-brand-500">.ai</span>
+                </span>
+            </div>
+            
+            <!-- Badges & Crédits -->
+            <div class="flex items-center space-x-3">
+                <span id="creditBadge" class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-brand-500/10 text-brand-400 border border-brand-500/20">
+                    <i class="fa-solid fa-ticket text-brand-400"></i>
+                    <span id="creditsCount">Essais gratuits : 2/2</span>
+                </span>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="max-w-6xl mx-auto px-6 py-10 w-full flex-grow">
+        
+        <!-- Hero Title -->
+        <div class="text-center max-w-3xl mx-auto mb-10">
+            <h1 class="text-4xl sm:text-5xl font-extrabold text-white tracking-tight leading-tight mb-4">
+                Décrochez votre entretien avec une <span class="bg-gradient-to-r from-brand-400 to-indigo-400 bg-clip-text text-transparent">lettre sur-mesure</span>
+            </h1>
+            <p class="text-slate-400 text-lg">
+                Collez les détails de votre profil et de l'offre visée. L'intelligence artificielle se charge d'aligner vos compétences avec les attentes du recruteur.
+            </p>
+        </div>
+
+        <!-- App Grid -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            
+            <!-- Form Column -->
+            <div class="bg-cardBg rounded-2xl p-6 sm:p-8 border border-borderBg shadow-2xl space-y-6">
+                <div>
+                    <label class="flex items-center justify-between text-sm font-semibold text-slate-200 mb-2">
+                        <span>1. Vos compétences & expériences (CV)</span>
+                        <span class="text-xs text-slate-500 font-normal">Obligatoire</span>
+                    </label>
+                    <textarea id="cvInput" rows="5" class="w-full bg-slate-900/90 border border-slate-700/80 rounded-xl p-4 text-sm text-slate-200 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-transparent transition-all resize-none" placeholder="Ex: Étudiant en 3e année de BUT Informatique, passionné par le dev web, maîtrise de React et Node.js..."></textarea>
+                </div>
+
+                <div>
+                    <label class="flex items-center justify-between text-sm font-semibold text-slate-200 mb-2">
+                        <span>2. L'offre d'emploi ou de stage</span>
+                        <span class="text-xs text-slate-500 font-normal">Obligatoire</span>
+                    </label>
+                    <textarea id="offerInput" rows="5" class="w-full bg-slate-900/90 border border-slate-700/80 rounded-xl p-4 text-sm text-slate-200 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-transparent transition-all resize-none" placeholder="Ex: Recherche Développeur Web Junior (H/F). Missions : création d'interfaces utilisateur, travail en équipe agile..."></textarea>
+                </div>
+
+                <button onclick="generateLetter()" id="generateBtn" class="w-full bg-gradient-to-r from-brand-600 to-indigo-600 hover:from-brand-500 hover:to-indigo-500 text-white font-bold py-4 px-6 rounded-xl shadow-lg shadow-brand-500/25 transition-all duration-200 transform active:scale-[0.99] flex items-center justify-center space-x-2 cursor-pointer">
+                    <i class="fa-solid fa-wand-magic-sparkles"></i>
+                    <span>Générer ma lettre de motivation</span>
+                </button>
+            </div>
+
+            <!-- Output Column -->
+            <div class="bg-cardBg rounded-2xl p-6 sm:p-8 border border-borderBg shadow-2xl flex flex-col justify-between">
+                <div>
+                    <div class="flex items-center justify-between pb-4 mb-4 border-b border-slate-800">
+                        <h2 class="text-sm font-semibold text-slate-200 flex items-center gap-2">
+                            <i class="fa-regular fa-file-lines text-brand-400"></i>
+                            Résultat généré
+                        </h2>
+                        <button onclick="copyToClipboard()" id="copyBtn" class="text-xs font-semibold text-slate-400 hover:text-white bg-slate-800 hover:bg-slate-700 px-3 py-1.5 rounded-lg border border-slate-700 transition flex items-center gap-1.5">
+                            <i class="fa-regular fa-copy"></i>
+                            Copier
+                        </button>
+                    </div>
+
+                    <div id="resultOutput" class="w-full bg-slate-900/60 border border-slate-800/80 rounded-xl p-5 min-h-[320px] text-sm text-slate-300 whitespace-pre-wrap font-sans leading-relaxed">
+                        <div class="h-full flex flex-col items-center justify-center text-center text-slate-500 py-12">
+                            <i class="fa-solid fa-pen-nib text-3xl mb-3 opacity-40"></i>
+                            <p>Remplissez les informations à gauche puis cliquez sur "Générer" pour obtenir votre lettre personnalisée.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <p class="text-xs text-slate-500 text-center mt-4">
+                    Propulsé par l'IA Gemini • Relevez et ajustez les détails avant d'envoyer votre candidature.
+                </p>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- Modal Paywall (Payant) -->
+    <div id="paywallModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-cardBg border border-brand-500/30 rounded-2xl max-w-md w-full p-6 text-center shadow-2xl relative">
+            <div class="w-16 h-16 bg-gradient-to-tr from-brand-600 to-indigo-500 rounded-2xl flex items-center justify-center text-white text-2xl mx-auto mb-4 shadow-lg shadow-brand-500/30">
+                <i class="fa-solid fa-crown"></i>
+            </div>
+            
+            <h3 class="text-2xl font-extrabold text-white mb-2">Limite d'essais atteinte !</h3>
+            <p class="text-slate-400 text-sm mb-6">Vous avez utilisé vos 2 lettres de motivation gratuites. Passez à la version Pro pour débloquer des générations illimitées.</p>
+            
+            <div class="bg-slate-900/80 p-4 rounded-xl border border-slate-800 mb-6 text-left space-y-2">
+                <div class="flex items-center text-sm text-slate-300">
+                    <i class="fa-solid fa-check text-emerald-400 mr-2"></i> Lettres illimitées
+                </div>
+                <div class="flex items-center text-sm text-slate-300">
+                    <i class="fa-solid fa-check text-emerald-400 mr-2"></i> Export au format PDF & Word
+                </div>
+                <div class="flex items-center text-sm text-slate-300">
+                    <i class="fa-solid fa-check text-emerald-400 mr-2"></i> Modèles personnalisables (Senior, Stage...)
+                </div>
+            </div>
+
+            <a href="https://stripe.com" target="_blank" class="block w-full bg-gradient-to-r from-brand-600 to-indigo-600 hover:from-brand-500 hover:to-indigo-500 text-white font-bold py-3.5 px-6 rounded-xl shadow-lg shadow-brand-500/25 transition">
+                Débloquer l'accès Premium (4,99€ / mois)
+            </a>
+
+            <button onclick="closePaywall()" class="mt-4 text-xs text-slate-500 hover:text-slate-400 underline">
+                Fermer
+            </button>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="border-t border-slate-800/80 py-6 text-center text-xs text-slate-500">
+        <p>© 2026 LettreMotiv.ai — Tous droits réservés.</p>
+    </footer>
+
+    <!-- Logic Script -->
+    <script>
+        const MAX_FREE_CREDITS = 2;
+
+        function getUsedCredits() {
+            return parseInt(localStorage.getItem('lettreMotiv_used') || '0', 10);
+        }
+
+        function updateCreditsUI() {
+            const used = getUsedCredits();
+            const remaining = Math.max(0, MAX_FREE_CREDITS - used);
+            document.getElementById('creditsCount').textContent = `Essais gratuits : ${remaining}/${MAX_FREE_CREDITS}`;
+        }
+
+        // Init UI
+        updateCreditsUI();
+
+        async function generateLetter() {
+            const used = getUsedCredits();
+
+            // Vérification du quota payant
+            if (used >= MAX_FREE_CREDITS) {
+                openPaywall();
+                return;
+            }
+
+            const cv = document.getElementById('cvInput').value.trim();
+            const offer = document.getElementById('offerInput').value.trim();
+            const output = document.getElementById('resultOutput');
+            const btn = document.getElementById('generateBtn');
+
+            if (!cv || !offer) {
+                alert('Veuillez remplir vos expériences (CV) et le contenu de l\'offre d\'emploi.');
+                return;
+            }
+
+            // UI State : Chargement
+            btn.disabled = true;
+            btn.classList.add('opacity-75', 'cursor-not-allowed');
+            btn.innerHTML = `<i class="fa-solid fa-circle-notch animate-spin"></i><span>Génération en cours...</span>`;
+            output.innerHTML = `
+                <div class="flex flex-col items-center justify-center py-12 text-slate-400 space-y-3">
+                    <i class="fa-solid fa-circle-notch animate-spin text-2xl text-brand-400"></i>
+                    <p>L'IA analyse vos compétences et rédige votre lettre...</p>
+                </div>
+            `;
+
+            const prompt = `Rédige une lettre de motivation professionnelle et percutante en français basée sur ce profil :\n${cv}\n\nEt pour cette offre :\n${offer}`;
+
+            try {
+                // Appel au backend Vercel sécurisé
+                const response = await fetch('/api/generate', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ prompt: prompt })
+                });
+
+                const data = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(data.error || 'Erreur lors de la génération.');
+                }
+
+                const generatedText = data.candidates?.[0]?.content?.parts?.[0]?.text;
+
+                if (generatedText) {
+                    output.textContent = generatedText;
+                    
+                    // Incrémenter l'utilisation uniquement en cas de succès
+                    localStorage.setItem('lettreMotiv_used', used + 1);
+                    updateCreditsUI();
+                } else {
+                    throw new Error("Réponse de l'IA incompréhensible.");
+                }
+
+            } catch (error) {
+                output.innerHTML = `<div class="text-rose-400 p-2"><i class="fa-solid fa-triangle-exclamation mr-2"></i>Erreur : ${error.message}</div>`;
+            } finally {
+                btn.disabled = false;
+                btn.classList.remove('opacity-75', 'cursor-not-allowed');
+                btn.innerHTML = `<i class="fa-solid fa-wand-magic-sparkles"></i><span>Générer ma lettre de motivation</span>`;
+            }
+        }
+
+        function openPaywall() {
+            document.getElementById('paywallModal').classList.remove('hidden');
+        }
+
+        function closePaywall() {
+            document.getElementById('paywallModal').classList.add('hidden');
+        }
+
+        function copyToClipboard() {
+            const text = document.getElementById('resultOutput').textContent;
+            if (text && !text.includes('Remplissez les informations') && !text.includes('Erreur')) {
+                navigator.clipboard.writeText(text);
+                const copyBtn = document.getElementById('copyBtn');
+                copyBtn.innerHTML = `<i class="fa-solid fa-check text-emerald-400"></i> Copié !`;
+                setTimeout(() => {
+                    copyBtn.innerHTML = `<i class="fa-regular fa-copy"></i> Copier`;
+                }, 2000);
+            }
+        }
+    </script>
+</body>
+</html>
